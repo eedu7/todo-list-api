@@ -1,9 +1,6 @@
-from .users import User
-from .todos import Todo
 from database import Base
 
-__all__ = [
-    "User",
-    "Todo",
-    "Base"
-]
+from .todos import Todo
+from .users import User
+
+__all__ = ["User", "Todo", "Base"]

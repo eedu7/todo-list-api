@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import String, Integer, ForeignKey, Enum, DateTime
+from sqlalchemy import DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
+
 from database import Base
 from extras import Status
 
@@ -13,6 +14,10 @@ class Todo(Base):
     title: Mapped[str] = mapped_column(String, index=True)
     description: Mapped[str] = mapped_column(String)
     status: Mapped[Status] = mapped_column(Enum(Status), default=Status.TODO)
-    user_id: Mapped[Integer] = mapped_column(Integer, ForeignKey("users.id"))
+    user_id: Mapped[Integer] = mapped_column(
+        Integer, ForeignKey("users.id"), nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, onupdate=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, onupdate=datetime.now, nullable=True
+    )
