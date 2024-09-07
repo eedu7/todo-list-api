@@ -14,6 +14,7 @@ class Base(BaseModel):
 class CreateTodo(Base):
     pass
 
+
 class UpdateTodo(BaseModel):
     title: str | None = Field(None, examples=["Buy groceries"])
     description: str | None = Field(None, examples=["Buy groceries"])
