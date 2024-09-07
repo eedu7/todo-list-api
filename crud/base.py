@@ -1,4 +1,4 @@
-from typing import Any, Generic, Type, TypeVar
+from typing import Any, Generic, Type, TypeVar, List
 
 from sqlalchemy.orm import Session
 
@@ -12,11 +12,10 @@ class BasicCrud(Generic[ModelType]):
         self.model_class = model
         self.session = db_session
 
-    def get_by_id(self): ...
+    def get_by(self, field: str, value: Any) -> ModelType | None:
+        return self.session.query(self.model_class).filter(getattr(self.model_class, field) == value).one_or_none()
 
-    def get_by(self): ...
-
-    def get_all(self, skip: int = 0, limit: int = 10):
+    def get_all(self, skip: int = 0, limit: int = 10) -> List[ModelType] | None:
         return self.session.query(self.model_class).offset(skip).limit(limit).all()
 
     def create(self, attributes: dict[str, Any] = None) -> ModelType:
@@ -27,6 +26,16 @@ class BasicCrud(Generic[ModelType]):
         self.session.commit()
         return model
 
-    def update(self): ...
+    def update(self, model: ModelType, attributes: dict[str, Any] = None) -> ModelType:
+        if attributes is None:
+            return
 
-    def delete(self): ...
+        for key, value in attributes.items():
+            if value:
+                setattr(model, key, value)
+        self.session.commit()
+        return model
+
+    def delete(self, model: ModelType) -> None:
+        self.session.delete(model)
+        self.session.commit()
