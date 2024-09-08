@@ -22,6 +22,15 @@ class BasicCrud(Generic[ModelType]):
     def get_all(self, skip: int = 0, limit: int = 10) -> List[ModelType] | None:
         return self.session.query(self.model_class).offset(skip).limit(limit).all()
 
+    def search_by(self, field: str, value: Any, skip: int = 0, limit: int = 10):
+        return (
+            self.session.query(self.model_class)
+            .offset(skip)
+            .limit(limit)
+            .filter(getattr(self.model_class, field) == value)
+            .all()
+        )
+
     def create(self, attributes: dict[str, Any] = None) -> ModelType:
         if attributes is None:
             attributes = {}
