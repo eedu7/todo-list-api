@@ -24,13 +24,7 @@ Register a new user using the following request:
   "password": "password"
 }
 ```
-This will validate the given details, make sure the email is unique and store the user details in the database. Make sure to hash the password before storing it in the database. Respond with a token that can be used for authentication if the registration is successful.
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
-}
-```
-The token can either be a JWT token or a random string that can be used for authentication. We leave it up to you to decide the implementation details.
+This will validate the given details, make sure the email is unique and store the user details in the database. Make sure to hash the password before storing it in the database.
 
 ## User Login
 Authenticate the user using the following request:
@@ -45,7 +39,9 @@ Authenticate the user using the following request:
 This will validate the given email and password, and respond with a token if the authentication is successful.
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+  "exp": 123934
 }
 ```
 ## Create a To-Do Item
@@ -55,7 +51,8 @@ Create a new to-do item using the following request:
 ```json
 {
   "title": "Buy groceries",
-  "description": "Buy milk, eggs, and bread"
+  "description": "Buy milk, eggs, and bread",
+  "status": "todo"
 }
 ```
 User must send the token received from the login endpoint in the header to authenticate the request. You can use the Authorization header with the token as the value. In case the token is missing or invalid, respond with an error and status code 401.
@@ -69,7 +66,8 @@ Upon successful creation of the to-do item, respond with the details of the crea
 {
   "id": 1,
   "title": "Buy groceries",
-  "description": "Buy milk, eggs, and bread"
+  "description": "Buy milk, eggs, and bread",
+  "status": "todo"
 }
 ```
 ## Update a To-Do Item
@@ -80,7 +78,8 @@ Update an existing to-do item using the following request:
 ```json
 {
   "title": "Buy groceries",
-  "description": "Buy milk, eggs, bread, and cheese"
+  "description": "Buy milk, eggs, bread, and cheese",
+  "status": "todo"
 }
 ```
 Just like the create todo endpoint, user must send the token received. Also make sure to validate the user has the permission to update the to-do item i.e. the user is the creator of todo item that they are updating. Respond with an error and status code 403 if the user is not authorized to update the item.
@@ -94,7 +93,8 @@ Upon successful update of the to-do item, respond with the updated details of th
 {
   "id": 1,
   "title": "Buy groceries",
-  "description": "Buy milk, eggs, bread, and cheese"
+  "description": "Buy milk, eggs, bread, and cheese",
+  "todo": "todo"
 }
 ```
 ### Delete a To-Do Item
@@ -109,21 +109,18 @@ Get the list of to-do items using the following request:
 ```GET /todos?page=1&limit=10```
 User must be authenticated to access the tasks and the response should be paginated. Respond with the list of to-do items along with the pagination details.
 ```json
-{
-  "data": [
+[
     {
       "id": 1,
       "title": "Buy groceries",
-      "description": "Buy milk, eggs, bread"
+      "description": "Buy milk, eggs, bread",
+      "todo": "todo"
     },
     {
       "id": 2,
       "title": "Pay bills",
-      "description": "Pay electricity and water bills"
+      "description": "Pay electricity and water bills",
+      "todo": "todo"
     }
-  ],
-  "page": 1,
-  "limit": 10,
-  "total": 2
-}
+  ]
 ```
