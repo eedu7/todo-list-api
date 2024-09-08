@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -10,15 +8,15 @@ from schemas.todos import CreateTodo, TodoResponse, UpdateTodo
 router = APIRouter()
 
 
-@router.get("/", response_model=List[TodoResponse])
-def get_todos(db: Session = Depends(get_db), skip: int = 0, limit: int = 10):
+@router.get("/")
+def get_todos(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     return todo_crud.get_all(db, skip, limit)
 
 
 @router.get("/{todo_id}", response_model=TodoResponse)
 def get_todo(
-    todo_id: int,
-    db: Session = Depends(get_db),
+        todo_id: int,
+        db: Session = Depends(get_db),
 ):
     return todo_crud.get_by_id(db, todo_id)
 

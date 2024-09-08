@@ -11,6 +11,11 @@ def get_by_id(db: Session, user_id: int):
     return user_crud.get_by("id", user_id)
 
 
+def get_by_email(db: Session, email: str) -> User | None:
+    user_crud = BasicCrud(model=User, db_session=db)
+    return user_crud.get_by("email", email)
+
+
 def get_all_users(db: Session, skip: int = 0, limit: int = 10):
     user_crud = BasicCrud(model=User, db_session=db)
     return user_crud.get_all(skip, limit)

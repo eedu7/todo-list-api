@@ -5,8 +5,8 @@ from jose import jwt
 
 from env_config import config
 
-def get_timestamp():
 
+def get_timestamp():
     current_timestamp = datetime.now().timestamp()
 
     current_datetime = datetime.fromtimestamp(current_timestamp)
@@ -28,6 +28,3 @@ def encode_token(payload: dict) -> Tuple[str, str]:
 
 def decode_token(token: str) -> dict:
     return jwt.decode(token, key=config.SECRET_KEY, algorithms=config.JWT_ALGORITHM)
-
-
-
