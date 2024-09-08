@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from fastapi_limiter.depends import RateLimiter
 
 from crud import todo as todo_crud
 from database import get_db
@@ -8,11 +9,14 @@ from models import User
 from schemas.todos import CreateTodo, TodoResponse, UpdateTodo
 from utils.get_current_user import get_current_user
 
-router = APIRouter()
+router = APIRouter(
+    dependencies=[Depends(RateLimiter(times=10, minutes=1))]
+)
 
 
 @router.get(
     "/",
+
 )
 def get_todos(
     skip: int = 0,
