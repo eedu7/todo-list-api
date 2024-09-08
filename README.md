@@ -10,7 +10,7 @@ $ pip install -r requirements.txt
 $ python main.py
 ```
 
-# Given below is a list of the endpoints and the details of the request and response:
+Given below is a list of the endpoints and the details of the request and response:
 
 ## User Registration
 Register a new user using the following request:
