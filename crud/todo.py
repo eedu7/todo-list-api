@@ -33,6 +33,11 @@ def get_all_by_user_id(
 def get_by_id(db: Session, todo_id: int, user_id: int):
     base_crud = BasicCrud(model=Todo, db_session=db)
     todo = base_crud.get_by("id", todo_id)
+    if not todo:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Todo not found"
+        )
     if todo.user_id != user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized"

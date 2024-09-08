@@ -29,7 +29,5 @@ def login_user(db: Session, user_login: Login) -> bool:
 def generate_token(email: str) -> Token:
     payload = {"email": email}
     access_token, exp = jwt.encode_token(payload)
-    refresh_token, exp = jwt.encode_token(
-        {"token-type": "Refresh-token", "email": email}
-    )
+    refresh_token, exp = jwt.encode_token({"type": "Refresh Token", "email": email})
     return Token(access_token=access_token, refresh_token=refresh_token, exp=exp)

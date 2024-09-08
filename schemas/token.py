@@ -5,3 +5,7 @@ class Token(BaseModel):
     access_token: str
     refresh_token: str
     exp: int
+
+
+class RefreshToken(BaseModel):
+    refresh_token: str
