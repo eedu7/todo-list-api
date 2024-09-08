@@ -14,4 +14,6 @@ class User(Base):
     email: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, onupdate=datetime.now, nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, onupdate=datetime.now, nullable=True
+    )

@@ -2,7 +2,9 @@ from sqlalchemy.engine import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLITE_DATABASE_URL: str = "sqlite:///todo.db"
+from env_config import config
+
+SQLITE_DATABASE_URL: str = config.DATABASE_URL
 engine = create_engine(SQLITE_DATABASE_URL, connect_args={"check_same_thread": False})
 
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
