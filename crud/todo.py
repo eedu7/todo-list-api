@@ -1,5 +1,4 @@
 from fastapi import HTTPException, status
-from mypyc.irbuild.specialize import translate_safe_generator_call
 from sqlalchemy.orm import Session
 
 from crud import BasicCrud
