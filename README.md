@@ -7,6 +7,7 @@ Sample solution for the [todo-list-api](https://roadmap.sh/projects/todo-list-ap
 $ git clone https://github.com/eedu7/todo-list-api.git
 $ cd todo-list-api
 $ pip install -r requirements.txt
+$ alembic upgrade head
 $ python main.py
 ```
 
