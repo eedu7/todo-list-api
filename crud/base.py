@@ -25,9 +25,9 @@ class BasicCrud(Generic[ModelType]):
     def search_by(self, field: str, value: Any, skip: int = 0, limit: int = 10):
         return (
             self.session.query(self.model_class)
+            .filter(getattr(self.model_class, field) == value)
             .offset(skip)
             .limit(limit)
-            .filter(getattr(self.model_class, field) == value)
             .all()
         )
 

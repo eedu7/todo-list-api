@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from crud import todo as todo_crud
@@ -28,7 +29,7 @@ def get_todo(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
-    return todo_crud.get_by_id(db, todo_id)
+    return todo_crud.get_by_id(db, todo_id, user.id)
 
 
 @router.post("/")
@@ -36,8 +37,17 @@ def create_todo(
     todo: CreateTodo,
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
-):
-    return todo_crud.create_todo(db, todo)
+) -> JSONResponse:
+    created = todo_crud.create_todo(db, todo, user.id)
+    if created:
+        return JSONResponse(
+            status_code=status.HTTP_201_CREATED,
+            content={"message": "Todo created successfully!"},
+        )
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={"message": "Todo creation failed!"},
+    )
 
 
 @router.put("/{todo_id}")
@@ -47,11 +57,25 @@ def update_todo(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
-    return todo_crud.update_todo(db, todo_id, todo, user_id=user.id)
+    updated = todo_crud.update_todo(db, todo_id, todo, user_id=user.id)
+    if updated:
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": "Todo updated"}
+        )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK, content={"message": "Todo updation failed"}
+    )
 
 
 @router.delete("/{todo_id}")
 def delete_todo(
     todo_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)
-):
-    return todo_crud.delete_todo(db, todo_id, user.id)
+) -> JSONResponse:
+    deleted = todo_crud.delete_todo(db, todo_id, user.id)
+    if deleted:
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": "Todo deleted"}
+        )
+    return JSONResponse(
+        status_code=status.HTTP_200_OK, content={"message": "Todo deletion failed"}
+    )

@@ -42,7 +42,7 @@ def create_todo(db: Session, todo: CreateTodo, user_id: int):
 
 def update_todo(db: Session, todo_id: int, todo: UpdateTodo, user_id: int):
     base_crud = BasicCrud(model=Todo, db_session=db)
-    model = get_by_id(db, todo_id)
+    model = get_by_id(db, todo_id, user_id)
     if model.user_id != user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized"
@@ -58,7 +58,7 @@ def update_todo(db: Session, todo_id: int, todo: UpdateTodo, user_id: int):
 
 def delete_todo(db: Session, todo_id: int, user_id: int):
     base_crud = BasicCrud(model=Todo, db_session=db)
-    model = get_by_id(db, todo_id)
+    model = get_by_id(db, todo_id, user_id)
     if model.user_id != user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized"
