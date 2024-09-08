@@ -41,5 +41,5 @@ def token_expired(token: str) -> bool:
     current_time = get_timestamp()
 
     if exp < current_time:
-        return True
-    return False
+        return False
+    return True

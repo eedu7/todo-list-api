@@ -1,5 +1,6 @@
 from typing import Any, Generic, List, Type, TypeVar
 
+from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from database import Base
@@ -22,10 +23,24 @@ class BasicCrud(Generic[ModelType]):
     def get_all(self, skip: int = 0, limit: int = 10) -> List[ModelType] | None:
         return self.session.query(self.model_class).offset(skip).limit(limit).all()
 
-    def search_by(self, field: str, value: Any, skip: int = 0, limit: int = 10):
+    def filter_by(
+        self, field: str, value: Any, user_id: int, skip: int = 0, limit: int = 10
+    ):
         return (
             self.session.query(self.model_class)
-            .filter(getattr(self.model_class, field) == value)
+            .filter(
+                and_(getattr(self.model_class, field) == value),
+                getattr(self.model_class, "user_id") == user_id,
+            )
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+    def search_by_user_id(self, user_id: int, skip: int = 0, limit: int = 10):
+        return (
+            self.session.query(self.model_class)
+            .filter(getattr(self.model_class, "user_id") == user_id)
             .offset(skip)
             .limit(limit)
             .all()

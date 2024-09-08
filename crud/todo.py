@@ -12,9 +12,23 @@ def get_all(db: Session, skip: int = 0, limit: int = 10):
     return base_crud.get_all(skip, limit)
 
 
-def get_all_by_user_id(db: Session, user_id: int, skip: int = 0, limit: int = 10):
+def get_all_by_user_id(
+    db: Session,
+    user_id: int,
+    skip: int = 0,
+    limit: int = 10,
+    filter_by: str | None = None,
+    value: str | None = None,
+):
     base_crud = BasicCrud(model=Todo, db_session=db)
-    return base_crud.search_by("user_id", user_id, skip, limit)
+
+    if filter_by and value:
+        todos = base_crud.filter_by(
+            field=filter_by, value=value, limit=limit, skip=skip, user_id=user_id
+        )
+        return todos
+
+    return base_crud.search_by_user_id(user_id, skip, limit)
 
 
 def get_by_id(db: Session, todo_id: int, user_id: int):

@@ -17,10 +17,12 @@ router = APIRouter()
 def get_todos(
     skip: int = 0,
     limit: int = 10,
+    filter_by: str | None = None,
+    value: str | None = None,
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
-    return todo_crud.get_all_by_user_id(db, user.id, skip, limit)
+    return todo_crud.get_all_by_user_id(db, user.id, skip, limit, filter_by, value)
 
 
 @router.get("/{todo_id}", response_model=TodoResponse)
