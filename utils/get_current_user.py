@@ -6,7 +6,7 @@ from crud import users as crud_user
 from database import get_db
 from models import User
 
-from .jwt import decode_token
+from .jwt import decode_token, token_expired
 
 
 def get_current_user(
@@ -21,6 +21,18 @@ def get_current_user(
     access_token = token.credentials[7:]
     payload = decode_token(access_token)
     email = payload.get("email", None)
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+        )
+    is_expired = token_expired(access_token)
+    if is_expired:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token expired",
+        )
+
     if not email:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

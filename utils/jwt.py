@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Tuple
 
+from fastapi import HTTPException, status
 from jose import jwt
 
 from env_config import config
@@ -28,3 +29,17 @@ def encode_token(payload: dict) -> Tuple[str, str]:
 
 def decode_token(token: str) -> dict:
     return jwt.decode(token, key=config.SECRET_KEY, algorithms=config.JWT_ALGORITHM)
+
+
+def token_expired(token: str) -> bool:
+    payload = decode_token(token)
+    exp = payload.get("exp", None)
+    if exp is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Token"
+        )
+    current_time = get_timestamp()
+
+    if exp < current_time:
+        return True
+    return False
